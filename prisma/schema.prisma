@@ -53,6 +53,7 @@ model Post {
 model Comment {
   id              String    @id @default(cuid())
   content         String
+  deleted         Boolean   @default(false)
   createdAt       DateTime  @default(now())
 
   postId          String
