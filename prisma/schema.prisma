@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+
+  posts         Post[]
+  comments      Comment[]
+  notifications Notification[]
+  activityLogs  ActivityLog[]
+}
+
+model AnonymousUser {
+  id        String    @id @default(cuid())
+  cookieId  String    @unique
+  nickname  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  comments     Comment[]
+  activityLogs ActivityLog[]
+}
+
+model Post {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime  @default(now())
+
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  comments  Comment[]
+}
+
+model Comment {
+  id              String    @id @default(cuid())
+  content         String
+  createdAt       DateTime  @default(now())
+
+  postId          String
+  post            Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  authorId        String?
+  author          User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  anonymousId     String?
+  anonymous       AnonymousUser? @relation(fields: [anonymousId], references: [id], onDelete: SetNull)
+
+  parentId        String?
+  parent          Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies         Comment[] @relation("CommentReplies")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      NotificationType
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  linkUrl   String?
+}
+
+model ActivityLog {
+  id          String       @id @default(cuid())
+  action      ActionType
+  metadata    String?
+  createdAt   DateTime     @default(now())
+
+  userId      String?
+  user        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  anonymousId String?
+  anonymous   AnonymousUser? @relation(fields: [anonymousId], references: [id], onDelete: Cascade)
+
+  targetType  String?
+  targetId    String?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum NotificationType {
+  NEW_COMMENT
+  COMMENT_REPLY
+}
+
+enum ActionType {
+  POST_CREATED
+  COMMENT_CREATED
+  COMMENT_REPLIED
+  NICKNAME_CHANGED
+  USER_REGISTERED
+  USER_LOGIN
+}
