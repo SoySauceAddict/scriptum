@@ -12,7 +12,7 @@ export default async function Home() {
 
   return (
     <>
-      <header className="app-header">
+      <header className="app-header" style={{ position: 'relative' }}>
         <div className="container app-header__inner">
           <Link href="/" className="logo">Scriptum</Link>
           <nav className="app-nav">
@@ -22,9 +22,6 @@ export default async function Home() {
                 <Link href="/profile" className="nav-user">
                   {user.name ?? user.email}
                 </Link>
-                {user.role === "ADMIN" && (
-                  <Link href="/admin" className="nav-link">na admin panel →</Link>
-                )}
                 <form action={logoutAction}>
                   <button type="submit" className="nav-link">Odhlásit</button>
                 </form>
@@ -38,6 +35,9 @@ export default async function Home() {
             )}
           </nav>
         </div>
+        {user && user.role === "ADMIN" && (
+          <Link href="/admin" className="nav-link" style={{ position: 'absolute', right: '20px', top: '15px' }}>na admin panel →</Link>
+        )}
       </header>
 
       <main className="main">
