@@ -25,7 +25,7 @@ export default async function ProfilePage() {
     <>
       <header className="app-header">
         <div className="container app-header__inner">
-          <Link href="/" className="logo">Scriptum</Link>
+          <Link href="/" className="logo"><img src="/logo.svg" alt="Scriptum" style={{height:"34px",width:"auto",display:"block"}} /></Link>
           <nav className="app-nav">
             <NotificationsBell />
             <span className="nav-user">{user.name ?? user.email}</span>

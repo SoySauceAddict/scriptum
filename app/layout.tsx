@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Scriptum",
   description: "Místo pro psaný projev.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

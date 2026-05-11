@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { fetchTable, TABLES, TABLE_LABEL, type TableKey } from "@/lib/admin-tables";
+import { fetchTable, TABLE_DEFS, TABLES, type TableKey } from "@/lib/admin-tables";
+import { DeleteButton } from "@/app/admin/_components/delete-button";
 
 export default async function AdminTablePage({
   params,
@@ -8,8 +10,11 @@ export default async function AdminTablePage({
 }) {
   const { table } = await params;
   if (!TABLES.includes(table as TableKey)) notFound();
+
   const key = table as TableKey;
+  const def = TABLE_DEFS[key];
   const rows = await fetchTable(key);
+  const hasEditableFields = def.fields.some((f) => f.editable);
 
   const columns =
     rows.length > 0
@@ -19,13 +24,13 @@ export default async function AdminTablePage({
             return set;
           }, new Set())
         )
-      : [];
+      : def.fields.map((f) => f.key);
 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 18, flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 className="page-title" style={{ marginBottom: 2 }}>{TABLE_LABEL[key]}</h1>
+          <h1 className="page-title" style={{ marginBottom: 2 }}>{def.label}</h1>
           <p style={{ fontSize: 13, color: "var(--text-muted)", margin: 0 }}>
             {rows.length} záznamů
           </p>
@@ -45,6 +50,7 @@ export default async function AdminTablePage({
                 {columns.map((c) => (
                   <th key={c}>{c}</th>
                 ))}
+                <th>Akce</th>
               </tr>
             </thead>
             <tbody>
@@ -55,6 +61,14 @@ export default async function AdminTablePage({
                       {formatCell(r[c])}
                     </td>
                   ))}
+                  <td style={{ whiteSpace: "nowrap", display: "flex", gap: 6 }}>
+                    {hasEditableFields && (
+                      <Link href={`/admin/${key}/${r.id}`} className="btn btn--sm">
+                        Upravit
+                      </Link>
+                    )}
+                    <DeleteButton table={key} id={String(r.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -68,6 +82,7 @@ export default async function AdminTablePage({
 function formatCell(v: unknown): string {
   if (v === null || v === undefined) return "—";
   if (v instanceof Date) return v.toLocaleString("cs-CZ");
+  if (typeof v === "boolean") return v ? "Ano" : "Ne";
   if (typeof v === "object") return JSON.stringify(v);
   return String(v);
 }
