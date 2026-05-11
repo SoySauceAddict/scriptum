@@ -8,7 +8,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <Link href="/" className="logo" style={{ marginBottom: 18 }}>Scriptum</Link>
+        <Link href="/" className="logo" style={{ marginBottom: 18 }}><img src="/logo.svg" alt="Scriptum" style={{ height: "34px", width: "auto", display: "block" }} /></Link>
         <Link href="/" className="nav-link">← na web</Link>
         <h3>Admin</h3>
         <Link href="/admin" className="nav-link">Přehled</Link>

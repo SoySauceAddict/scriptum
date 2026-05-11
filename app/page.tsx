@@ -14,7 +14,7 @@ export default async function Home() {
     <>
       <header className="app-header" style={{ position: 'relative' }}>
         <div className="container app-header__inner">
-          <Link href="/" className="logo">Scriptum</Link>
+          <Link href="/" className="logo"><img src="/logo.svg" alt="Scriptum" style={{height:"34px",width:"auto",display:"block"}} /></Link>
           <nav className="app-nav">
             {user ? (
               <>

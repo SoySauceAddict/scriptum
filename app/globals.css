@@ -74,8 +74,13 @@ a { color: var(--accent); }
 }
 
 .logo::before {
-  content: "◈";
-  font-size: 16px;
+  content: none;
+}
+
+.logo img {
+  height: 34px;
+  width: auto;
+  display: block;
 }
 
 .app-nav {

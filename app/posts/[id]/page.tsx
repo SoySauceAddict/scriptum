@@ -41,7 +41,7 @@ export default async function PostDetailPage({
     <>
       <header className="app-header">
         <div className="container app-header__inner">
-          <Link href="/" className="logo">Scriptum</Link>
+          <Link href="/" className="logo"><img src="/logo.svg" alt="Scriptum" style={{height:"34px",width:"auto",display:"block"}} /></Link>
           <nav className="app-nav">
             {user ? (
               <>
