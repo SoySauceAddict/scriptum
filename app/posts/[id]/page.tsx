@@ -46,8 +46,6 @@ export default async function PostDetailPage({
             {user ? (
               <>
                 <NotificationsBell />
-                <Link href="/profile" className="nav-user">{user.name ?? user.email}</Link>
-                {user.role === "ADMIN" && <Link href="/admin" className="nav-link">na admin panel →</Link>}
                 <form action={logoutAction}>
                   <button type="submit" className="nav-link">Odhlásit</button>
                 </form>
@@ -60,6 +58,9 @@ export default async function PostDetailPage({
             )}
           </nav>
         </div>
+        {user && user.role === "ADMIN" && (
+                  <Link href="/admin" className="nav-link" style={{ position: 'absolute', right: '20px', top: '15px' }}>na admin panel →</Link>
+                )}
       </header>
 
       <main className="main">
