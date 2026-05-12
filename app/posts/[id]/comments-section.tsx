@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { KebabMenu } from "@/app/_components/kebab-menu";
+import { openNicknameModal } from "@/app/_components/nickname-modal";
 
 type Comment = {
   id: string;
@@ -210,10 +211,10 @@ function CommentNode({
         </p>
       )}
 
-      {!comment.deleted && !editing && identity.type !== "guest" && (
+      {!comment.deleted && !editing && (
         <div className="comment-actions">
           <button
-            onClick={() => setReplying((v) => !v)}
+            onClick={identity.type === "guest" ? openNicknameModal : () => setReplying((v) => !v)}
             className="comment-action-button"
           >
             {replying ? "Zrušit" : "Odpovědět"}

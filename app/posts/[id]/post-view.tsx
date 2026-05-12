@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { KebabMenu } from "@/app/_components/kebab-menu";
+import { NicknameModal, openNicknameModal } from "@/app/_components/nickname-modal";
 
 type Identity = {
   type: "user" | "anonymous" | "guest";
@@ -148,12 +149,20 @@ export function PostView({ post, identity, isMine, canEdit, canDelete }: Props) 
       {identity.type !== "guest" ? (
         <RootCommentForm postId={post.id} />
       ) : (
-        <div className="room-panel__comment-form">
-          <p style={{ margin: 0, fontSize: 13, color: "var(--text-muted)" }}>
-            Pro psaní komentáře si nahoře nastav přezdívku, nebo se přihlas.
-          </p>
+        <div className="room-panel__comment-form" onClick={openNicknameModal} style={{ cursor: "pointer" }}>
+          <p className="room-panel__comment-form-title">Zapojte se do diskuze</p>
+          <textarea
+            readOnly
+            placeholder="Napiš komentář…"
+            className="field"
+            style={{ pointerEvents: "none" }}
+          />
+          <div className="room-panel__comment-form-actions">
+            <button type="button" className="btn btn--primary" tabIndex={-1}>Sdílet</button>
+          </div>
         </div>
       )}
+      <NicknameModal />
     </div>
   );
 }
